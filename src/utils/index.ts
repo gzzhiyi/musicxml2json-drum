@@ -46,19 +46,19 @@ export function numberToNoteType(num: number): NoteType {
  * 获取音色
  */
 const InstrumentMap = {
-  36: { code: 36, name: 'Kick', simCode: 36, value: [36], index: 0 },
-  37: { code: 37, name: 'Snare', simCode: 37, value: [37], index: 1 },
-  38: { code: 38, name: 'Snare', simCode: 38, value: [38, 125], index: 2 },
-  42: { code: 42, name: 'Hi-Hat', simCode: 42, value: [22, 42], index: 3 },
-  43: { code: 43, name: 'Tom3', simCode: 43, value: [43, 74], index: 4 },
-  44: { code: 44, name: 'Hi-hat', simCode: 44, value: [23, 44], index: 5 },
-  45: { code: 45, name: 'Tom2', simCode: 45, value: [45, 77], index: 6 },
-  46: { code: 46, name: 'Hi-hat', simCode: 46, value: [14, 46], index: 7 },
-  48: { code: 48, name: 'Tom1', simCode: 48, value: [48, 81], index: 1 },
-  49: { code: 49, name: 'Crash', simCode: 49, value: [27, 49, 58], index: 2 },
-  51: { code: 51, name: 'Ride', simCode: 51, value: [51, 59], index: 2 },
-  91: { code: 91, name: 'Ride', simCode: 91, value: [40, 91], index: 3 },
-  92: { code: 92, name: 'Hi-hat', simCode: 92, value: [12, 64, 92], index: 4 }
+  36: { code: 36, name: 'Kick', value: [36], index: 0 },
+  37: { code: 37, name: 'Snare', value: [37], index: 1 },
+  38: { code: 38, name: 'Snare', value: [38, 125], index: 2 },
+  42: { code: 42, name: 'Hi-Hat', value: [22, 42], index: 3 },
+  43: { code: 43, name: 'Tom3', value: [43, 74], index: 4 },
+  44: { code: 44, name: 'Hi-hat', value: [23, 44], index: 5 },
+  45: { code: 45, name: 'Tom2', value: [45, 77], index: 6 },
+  46: { code: 46, name: 'Hi-hat', value: [14, 46], index: 7 },
+  48: { code: 48, name: 'Tom1', value: [48, 81], index: 1 },
+  49: { code: 49, name: 'Crash', value: [27, 49, 58], index: 2 },
+  51: { code: 51, name: 'Ride', value: [51, 59], index: 2 },
+  91: { code: 91, name: 'Ride', value: [40, 91], index: 3 },
+  92: { code: 92, name: 'Hi-hat', value: [12, 64, 92], index: 4 }
 }
 
 export function getInstrument(code: number, noteId?: string): NoteData {
