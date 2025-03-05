@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  padding: 20px;
+  color: #FFFFFF;
+  font-size: 12px;
+  background-color: rgb(39, 40, 34);
+}
+
+h1 {
+  font-size: 16px;
+}
+
+h2 {
+  font-size: 14px;
+}
+
+.input-box {
+  max-width: 800px;
+  padding: 20px;
+  text-align: center;
+  border: 2px #CCCCCC dashed;
+}
