@@ -13,11 +13,6 @@ export type Slur = 'start' | 'continue' | 'end'
 
 export type Stem = 'up' | 'down'
 
-export type Technical = {
-  fret: number
-  string: number
-}
-
 export type Tied = 'start' | 'continue' | 'stop'
 
 export type Tuplet = 'start' | 'stop'
@@ -65,17 +60,10 @@ export type NoteXML = {
   [propName: string]: any
 }
 
-/**
- * Types
- */
-type Pitch = {
-  alter: number | null
-  octave: number | null
-  step: string | null
-}
-
-export interface NoteData extends Technical {
-  pitch: Pitch
+export interface NoteData {
+  code: number
+  name: string
+  value: number[]
 }
 
 export interface Time {

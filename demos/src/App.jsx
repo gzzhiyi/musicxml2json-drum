@@ -26,7 +26,7 @@ export default function App() {
 
   useEffect(() => {
     if (xmlContent) {
-      const result = new Parser(xmlContent, { debug: true, speed: 1 })
+      const result = new Parser({ xmlStr: xmlContent, debug: true, speed: 1 })
 
       // 递归过滤掉所有以 _ 开头的键
       function removeUnderscoreKeys(obj) {

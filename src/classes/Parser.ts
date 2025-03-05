@@ -61,7 +61,7 @@ export default class Parser {
     return parts.filter(part => {
       const measure = part.measure
       const firstMeasure = isArray(measure) ? measure[0] : isObject(measure) ? measure : null
-      return firstMeasure?.attributes?.clef?.sign === 'TAB'
+      return firstMeasure?.attributes?.clef?.sign === 'percussion'
     })
   }
 

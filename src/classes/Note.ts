@@ -1,4 +1,5 @@
 import { has, isArray } from 'lodash'
+import { getInstrument } from '@/utils'
 import {
   Beam,
   Dot,
@@ -63,18 +64,19 @@ export default class Note implements NoteInterface {
     return isArray(beam) ? beam.map(item => item['#text']) : [beam['#text']]
   }
 
+  private getCode(noteXML): number | null {
+    return noteXML?.notations?.technical?.fret || noteXML?.notations?.technical?.root?.fret || null
+  }
+
   getData(noteXML: NoteXML): NoteData | null {
-    const technical = noteXML?.notations?.technical
-    if (!technical) return null
+    const code = this.getCode(noteXML) // 获取曲谱CODE
 
-    const { fret, string } = technical
-    const { alter = null, octave = null, step = null } = noteXML.pitch || {}
-
-    return {
-      fret,
-      pitch: { alter, octave, step },
-      string
+    if (!code) {
+      return null
     }
+
+    const instrument = getInstrument(code, this.id) // 获取乐器对应配置
+    return instrument
   }
 
   private getDot(noteXML: NoteXML): Dot | null {
