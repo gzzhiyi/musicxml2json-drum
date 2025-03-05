@@ -61,8 +61,10 @@ export type NoteXML = {
 }
 
 export interface NoteData {
+  index: number
   code: number
   name: string
+  simCode: number
   value: number[]
 }
 
