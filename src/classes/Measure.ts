@@ -23,7 +23,6 @@ type PropsType = {
 }
 
 export default class Measure {
-  public capo: number
   public metronome: Metronome
   public notes: Note[]
   public number: string
@@ -53,15 +52,10 @@ export default class Measure {
     this.speed = speed || 1
 
     // Prototypes
-    this.capo = this.getCapo(xmlData)
     this.metronome = { beatUnit, bpm }
     this.timeSignature = { beats, beatType }
     this.number = this.getNumber(xmlData)
     this.notes = this.getNotes(xmlData)
-  }
-
-  private getCapo(measureXML: MeasureXML): number {
-    return measureXML?.attributes?.['staff-details']?.capo || 0
   }
 
   private getNotes(measureXML: MeasureXML): Note[] {

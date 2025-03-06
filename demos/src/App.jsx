@@ -9,7 +9,7 @@ export default function App() {
   const fileInputRef = useRef(null)
 
   function handleFileUpload(event) {
-    const file = event.target.files[0] || event.dataTransfer?.files[0]
+    const file = event?.target?.files?.[0] || event?.dataTransfer?.files?.[0]
     if (file && file.type === 'text/xml') {
       const reader = new FileReader()
       reader.onload = (e) => setXmlContent(e.target.result)

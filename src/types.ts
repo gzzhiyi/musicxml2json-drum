@@ -109,7 +109,6 @@ export type TimeSignature = {
 }
 
 export type Measure = {
-  capo: number
   id: string
   isLast: boolean
   metronome: Metronome
