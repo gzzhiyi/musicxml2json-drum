@@ -1,6 +1,6 @@
 {
   "name": "musicxml2json-drum",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "hezhiyi",
   "license": "MIT",
   "description": "MusicXML to JSON for drum.",
@@ -12,7 +12,7 @@
   "homepage": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gzzhiyi/musicxml2json-guitar.git"
+    "url": "git+https://github.com/gzzhiyi/musicxml2json-drum.git"
   },
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
