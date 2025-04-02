@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import _ from 'lodash'
 import ReactJson from 'react-json-view'
-import { Parser } from '../dist/index.esm.js'
+import { Parser } from '../../dist/index.esm.js'
 
 export default function App() {
   const [xmlContent, setXmlContent] = useState(null)

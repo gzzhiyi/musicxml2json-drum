@@ -23,17 +23,17 @@ export default {
   output: [
     {
       name: 'musicxml2json-drum',
-      file: 'demos/dist/index.js', // 通用模块
+      file: 'dist/index.js', // 通用模块
       format: 'umd',
     },
     {
       name: 'musicxml2json-drum',
-      file: 'demos/dist/index.esm.js', // es6模块
+      file: 'dist/index.esm.js', // es6模块
       format: 'esm',
     }
   ],
   plugins: [
-    del({ targets: 'demos/dist/*' }),
+    del({ targets: 'dist/*' }),
     replace({
       preventAssignment: true,
       babelHelpers: 'runtime',
@@ -47,7 +47,7 @@ export default {
     eslint({
       throwOnError: true,
       include: ['src/**/*.ts'],
-      exclude: ['node_modules/**', 'dist/**', 'demos/**', 'build/**']
+      exclude: ['node_modules/**', 'dist/**', 'example/**', 'build/**']
     }),
     typescript({
       extensions

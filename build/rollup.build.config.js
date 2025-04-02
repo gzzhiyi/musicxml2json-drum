@@ -48,7 +48,7 @@ export default {
     eslint({
       throwOnError: true,
       include: ['src/**/*.ts'],
-      exclude: ['node_modules/**', 'dist/**', 'demos/**', 'build/**']
+      exclude: ['node_modules/**', 'dist/**', 'example/**', 'build/**']
     }),
     typescript({
       extensions
