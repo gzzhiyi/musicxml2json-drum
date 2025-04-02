@@ -3,6 +3,22 @@ import _ from 'lodash'
 import ReactJson from 'react-json-view'
 import { Parser } from '../../dist/index.esm.js'
 
+const configs = {
+  36: { code: 36, name: 'Kick', value: [36], index: 0 },
+  37: { code: 37, name: 'Snare', value: [37], index: 1 },
+  38: { code: 38, name: 'Snare', value: [38, 125], index: 2 },
+  42: { code: 42, name: 'Hi-Hat', value: [22, 42], index: 3 },
+  43: { code: 43, name: 'Tom3', value: [43, 74], index: 4 },
+  44: { code: 44, name: 'Hi-hat', value: [23, 44], index: 5 },
+  45: { code: 45, name: 'Tom2', value: [45, 77], index: 6 },
+  46: { code: 46, name: 'Hi-hat', value: [14, 46], index: 7 },
+  48: { code: 48, name: 'Tom1', value: [48, 81], index: 1 },
+  49: { code: 49, name: 'Crash', value: [27, 49, 58], index: 2 },
+  51: { code: 51, name: 'Ride', value: [51, 59], index: 2 },
+  91: { code: 91, name: 'Ride', value: [40, 91], index: 3 },
+  92: { code: 92, name: 'Hi-hat', value: [12, 64, 92], index: 4 }
+}
+
 export default function App() {
   const [xmlContent, setXmlContent] = useState(null)
   const [parsedData, setParsedData] = useState(null)
@@ -26,7 +42,12 @@ export default function App() {
 
   useEffect(() => {
     if (xmlContent) {
-      const result = new Parser({ xmlStr: xmlContent, debug: true, speed: 1 })
+      const result = new Parser({
+        xmlStr: xmlContent,
+        instrumentConfig: configs,
+        debug: true,
+        speed: 1
+      })
 
       // 递归过滤掉所有以 _ 开头的键
       function removeUnderscoreKeys(obj) {

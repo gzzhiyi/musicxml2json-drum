@@ -47,6 +47,7 @@ type TimeSignatureXML = {
 
 type MeasureAttributesXML = {
   clef?: ClefXML
+  divisions?: number
   time?: TimeSignatureXML
 }
 
@@ -89,7 +90,6 @@ export type Note = {
   data: NoteData[] | null
   dot: Dot | null
   id: string
-  name: string
   notations: Notations
   stem: Stem | null
   time: Time | null
@@ -109,6 +109,7 @@ export type TimeSignature = {
 }
 
 export type Measure = {
+  divisions: number
   id: string
   isLast: boolean
   metronome: Metronome
@@ -121,4 +122,11 @@ export type Measure = {
 export type Part = {
   duration: number
   measures: Measure[]
+}
+
+export type Instrument = {
+  code: number
+  name: string
+  value: number[]
+  index: number
 }

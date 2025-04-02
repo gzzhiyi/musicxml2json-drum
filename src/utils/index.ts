@@ -24,8 +24,8 @@ export function noteTypeToNumber(type: NoteType): number {
 /**
  * 数字转成音符类型
  */
-export function numberToNoteType(num: number): NoteType {
-  const types = {
+export function numberToNoteType(num: number): NoteType | undefined {
+  const types: Record<number, NoteType> = {
     1: 'whole',
     2: 'half',
     4: 'quarter',
@@ -35,38 +35,21 @@ export function numberToNoteType(num: number): NoteType {
     64: '64th'
   }
 
-  if (!types[num]) {
-    console.warn(`Note type [${num}] is invalid.`);
+  if (!(num in types)) {
+    console.warn(`Note type [${num}] is invalid.`)
+    return undefined
   }
 
   return types[num];
 }
 
-/**
- * 获取音色
- */
-const InstrumentMap = {
-  36: { code: 36, name: 'Kick', value: [36], index: 0 },
-  37: { code: 37, name: 'Snare', value: [37], index: 1 },
-  38: { code: 38, name: 'Snare', value: [38, 125], index: 2 },
-  42: { code: 42, name: 'Hi-Hat', value: [22, 42], index: 3 },
-  43: { code: 43, name: 'Tom3', value: [43, 74], index: 4 },
-  44: { code: 44, name: 'Hi-hat', value: [23, 44], index: 5 },
-  45: { code: 45, name: 'Tom2', value: [45, 77], index: 6 },
-  46: { code: 46, name: 'Hi-hat', value: [14, 46], index: 7 },
-  48: { code: 48, name: 'Tom1', value: [48, 81], index: 1 },
-  49: { code: 49, name: 'Crash', value: [27, 49, 58], index: 2 },
-  51: { code: 51, name: 'Ride', value: [51, 59], index: 2 },
-  91: { code: 91, name: 'Ride', value: [40, 91], index: 3 },
-  92: { code: 92, name: 'Hi-hat', value: [12, 64, 92], index: 4 }
-}
-
-export function getInstrument(code: number, noteId?: string): NoteData {
-  const instrument = InstrumentMap[code]
+export function getInstrument(code: number, noteId?: string): NoteData | undefined {
+  const instrument = globalThis.InstrumentConfig?.[code]
 
   if (!instrument) {
     console.warn(`[${noteId}]Instrument ${code} is not a vaild code!`)
+    return undefined
   }
 
-  return instrument || {}
+  return instrument
 }

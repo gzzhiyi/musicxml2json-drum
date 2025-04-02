@@ -1,8 +1,9 @@
 import PartClass from '@/classes/Part';
-import { Measure, Note } from '@/types';
+import { Measure, Note, Instrument } from '@/types';
 type PropsType = {
     debug?: boolean;
     speed?: number;
+    instrumentConfig: Record<number, Instrument>;
     xmlStr: string;
 };
 export default class Parser {
@@ -13,10 +14,10 @@ export default class Parser {
     private _speed;
     constructor(props: PropsType);
     private getTitle;
-    private filterTabParts;
+    private filterParts;
     private getParts;
-    getMeasureById(id: string): Measure | null;
     private getMeasures;
+    getMeasureById(id: string): Measure | null;
     getNoteById(id: string): Note | null;
 }
 export {};

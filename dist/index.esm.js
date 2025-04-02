@@ -19251,32 +19251,19 @@ function numberToNoteType(num) {
         32: '32nd',
         64: '64th'
     };
-    if (!types[num]) {
+    if (!(num in types)) {
         console.warn(`Note type [${num}] is invalid.`);
+        return undefined;
     }
     return types[num];
 }
-const InstrumentMap = {
-    36: { code: 36, name: 'Kick', value: [36], index: 0 },
-    37: { code: 37, name: 'Snare', value: [37], index: 1 },
-    38: { code: 38, name: 'Snare', value: [38, 125], index: 2 },
-    42: { code: 42, name: 'Hi-Hat', value: [22, 42], index: 3 },
-    43: { code: 43, name: 'Tom3', value: [43, 74], index: 4 },
-    44: { code: 44, name: 'Hi-hat', value: [23, 44], index: 5 },
-    45: { code: 45, name: 'Tom2', value: [45, 77], index: 6 },
-    46: { code: 46, name: 'Hi-hat', value: [14, 46], index: 7 },
-    48: { code: 48, name: 'Tom1', value: [48, 81], index: 1 },
-    49: { code: 49, name: 'Crash', value: [27, 49, 58], index: 2 },
-    51: { code: 51, name: 'Ride', value: [51, 59], index: 2 },
-    91: { code: 91, name: 'Ride', value: [40, 91], index: 3 },
-    92: { code: 92, name: 'Hi-hat', value: [12, 64, 92], index: 4 }
-};
 function getInstrument(code, noteId) {
-    const instrument = InstrumentMap[code];
+    const instrument = globalThis.InstrumentConfig?.[code];
     if (!instrument) {
         console.warn(`[${noteId}]Instrument ${code} is not a vaild code!`);
+        return undefined;
     }
-    return instrument || {};
+    return instrument;
 }
 
 class Note {
@@ -19284,7 +19271,6 @@ class Note {
     data = null;
     dot = null;
     id;
-    name = '';
     notations = { slur: null, tied: null, tuplet: null };
     stem = null;
     time = null;
@@ -19322,7 +19308,7 @@ class Note {
             return null;
         }
         const instrument = getInstrument(code, this.id);
-        return instrument;
+        return instrument || null;
     }
     getDot(noteXML) {
         if (!lodash.exports.has(noteXML, 'dot')) {
@@ -19384,6 +19370,7 @@ class Note {
 }
 
 class Measure {
+    divisions;
     metronome;
     notes;
     number;
@@ -19393,13 +19380,14 @@ class Measure {
     timeSignature;
     speed;
     startTime;
-    constructor({ id, xmlData, startTime, beatUnit, bpm, beats, beatType, isLast, speed }) {
+    constructor({ divisions, id, xmlData, startTime, isLast, metronome, speed, timeSignature }) {
+        this.divisions = divisions;
         this.id = id;
         this.isLast = isLast;
         this.startTime = startTime;
         this.speed = speed || 1;
-        this.metronome = { beatUnit, bpm };
-        this.timeSignature = { beats, beatType };
+        this.metronome = metronome;
+        this.timeSignature = timeSignature;
         this.number = this.getNumber(xmlData);
         this.notes = this.getNotes(xmlData);
     }
@@ -19482,25 +19470,29 @@ class Part {
     metronome = { beatUnit: 4, bpm: 60 };
     timeSignature = { beats: 4, beatType: 4 };
     constructor({ measures, speed }) {
+        let globalDivisions = 1;
         measures.forEach((measure, index) => {
             const metronome = this.getMetronome(measure);
             metronome && this.setGlobalMetronome(metronome);
             const timeSignature = this.getTimeSignature(measure);
             timeSignature && this.setGlobalTimeSignature(timeSignature);
+            globalDivisions = this.getDivisions(measure) || globalDivisions;
             const measureClass = new Measure({
+                divisions: globalDivisions,
                 id: `M_${index + 1}`,
-                beatUnit: this.metronome.beatUnit,
-                bpm: this.metronome.bpm,
-                beats: this.timeSignature.beats,
-                beatType: this.timeSignature.beatType,
                 isLast: index === measures.length - 1,
+                metronome: this.metronome,
                 speed: speed || 1,
                 startTime: this.duration,
+                timeSignature: this.timeSignature,
                 xmlData: measure
             });
             this.duration += measureClass.time?.duration || 0;
             this.measures.push(measureClass);
         });
+    }
+    getDivisions(measureXML) {
+        return measureXML?.attributes?.divisions || null;
     }
     getMetronome(measureXML) {
         const directions = lodash.exports.isArray(measureXML?.direction) ? measureXML.direction : [measureXML?.direction];
@@ -19537,11 +19529,12 @@ class Parser {
     _oriXml = {};
     _speed = 1;
     constructor(props) {
-        const { debug, speed, xmlStr } = props;
+        const { debug, instrumentConfig, speed, xmlStr } = props;
         if (!fxp.XMLValidator.validate(xmlStr)) {
             console.error('Not valid file type.');
             return;
         }
+        globalThis.InstrumentConfig = instrumentConfig;
         this._debug = debug ?? this._debug;
         this._oriXml = parseXML(xmlStr) || {};
         this._speed = speed ?? this._speed;
@@ -19553,9 +19546,9 @@ class Parser {
         this._debug && console.log(this);
     }
     getTitle(musicXml) {
-        return musicXml['score-partwise']?.work?.['work-title'] || '';
+        return musicXml['score-partwise']?.work?.['work-title'] ?? '';
     }
-    filterTabParts(parts) {
+    filterParts(parts) {
         return parts.filter(part => {
             const measure = part.measure;
             const firstMeasure = lodash.exports.isArray(measure) ? measure[0] : lodash.exports.isObject(measure) ? measure : null;
@@ -19564,10 +19557,18 @@ class Parser {
     }
     getParts(xml) {
         const partXML = xml?.['score-partwise']?.part;
-        if (lodash.exports.isEmpty(partXML))
+        if (!partXML || lodash.exports.isEmpty(partXML))
             return [];
-        const parts = lodash.exports.isArray(partXML) ? partXML : lodash.exports.isObject(partXML) ? [partXML] : [];
-        return this.filterTabParts(parts);
+        const parts = lodash.exports.isArray(partXML) ? partXML : [partXML];
+        return this.filterParts(parts);
+    }
+    getMeasures(partXML) {
+        const measure = partXML.measure;
+        if (lodash.exports.isArray(measure))
+            return measure;
+        if (lodash.exports.isObject(measure))
+            return [measure];
+        return [];
     }
     getMeasureById(id) {
         for (const part of this.parts) {
@@ -19577,14 +19578,6 @@ class Parser {
             }
         }
         return null;
-    }
-    getMeasures(partXML) {
-        const measure = partXML.measure;
-        if (lodash.exports.isArray(measure))
-            return measure;
-        if (lodash.exports.isObject(measure))
-            return [measure];
-        return [];
     }
     getNoteById(id) {
         const allNotes = this.parts.flatMap(part => part.measures.flatMap(measure => measure.notes));

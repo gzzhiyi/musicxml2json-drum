@@ -15,6 +15,8 @@ export default class Part {
   public timeSignature: TimeSignature = { beats: 4, beatType: 4 }
 
   constructor({ measures, speed }: PropsType) {
+    let globalDivisions = 1
+
     measures.forEach((measure, index) => {
       const metronome = this.getMetronome(measure)
       metronome && this.setGlobalMetronome(metronome)
@@ -22,21 +24,26 @@ export default class Part {
       const timeSignature = this.getTimeSignature(measure)
       timeSignature && this.setGlobalTimeSignature(timeSignature)
 
+      globalDivisions = this.getDivisions(measure) || globalDivisions
+
       const measureClass = new MeasureClass({
+        divisions: globalDivisions,
         id: `M_${index + 1}`,
-        beatUnit: this.metronome.beatUnit,
-        bpm: this.metronome.bpm,
-        beats: this.timeSignature.beats,
-        beatType: this.timeSignature.beatType,
         isLast: index === measures.length - 1,
+        metronome: this.metronome,
         speed: speed || 1,
         startTime: this.duration,
+        timeSignature: this.timeSignature,
         xmlData: measure
       })
 
       this.duration += measureClass.time?.duration || 0
       this.measures.push(measureClass)
     })
+  }
+
+  private getDivisions(measureXML: MeasureXML): number | null {
+    return measureXML?.attributes?.divisions || null
   }
 
   private getMetronome(measureXML: MeasureXML): Metronome | null {

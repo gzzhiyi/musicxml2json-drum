@@ -10,6 +10,7 @@ export default class Part {
     metronome: Metronome;
     timeSignature: TimeSignature;
     constructor({ measures, speed }: PropsType);
+    private getDivisions;
     private getMetronome;
     private getTimeSignature;
     private setGlobalMetronome;

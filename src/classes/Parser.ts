@@ -12,12 +12,14 @@ import {
   PartXML,
   MeasureXML,
   Measure,
-  Note
+  Note,
+  Instrument
 } from '@/types'
 
 type PropsType = {
   debug?: boolean
   speed?: number
+  instrumentConfig: Record<number, Instrument>,
   xmlStr: string
 }
 
@@ -30,12 +32,19 @@ export default class Parser {
   private _speed: number = 1
 
   constructor(props: PropsType) {
-    const { debug, speed, xmlStr } = props
+    const {
+      debug,
+      instrumentConfig,
+      speed,
+      xmlStr
+    } = props
 
     if (!XMLValidator.validate(xmlStr)) {
       console.error('Not valid file type.')
       return
     }
+
+    globalThis.InstrumentConfig = instrumentConfig
 
     // Original data
     this._debug = debug ?? this._debug
@@ -54,10 +63,10 @@ export default class Parser {
   }
 
   private getTitle(musicXml: MusicXML): string {
-    return musicXml['score-partwise']?.work?.['work-title'] || ''
+    return musicXml['score-partwise']?.work?.['work-title'] ?? ''
   }
 
-  private filterTabParts(parts: PartXML[]): PartXML[] {
+  private filterParts(parts: PartXML[]): PartXML[] {
     return parts.filter(part => {
       const measure = part.measure
       const firstMeasure = isArray(measure) ? measure[0] : isObject(measure) ? measure : null
@@ -67,10 +76,17 @@ export default class Parser {
 
   private getParts(xml: MusicXML): PartXML[] {
     const partXML = xml?.['score-partwise']?.part
-    if (isEmpty(partXML)) return []
+    if (!partXML || isEmpty(partXML)) return []
 
-    const parts: PartXML[] = isArray(partXML) ? partXML : isObject(partXML) ? [partXML] : []
-    return this.filterTabParts(parts)
+    const parts: PartXML[] = isArray(partXML) ? partXML : [partXML]
+    return this.filterParts(parts)
+  }
+
+  private getMeasures(partXML: PartXML): MeasureXML[] {
+    const measure = partXML.measure;
+    if (isArray(measure)) return measure
+    if (isObject(measure)) return [measure]
+    return []
   }
 
   getMeasureById(id: string): Measure | null {
@@ -82,13 +98,6 @@ export default class Parser {
     }
 
     return null
-  }
-
-  private getMeasures(partXML: PartXML): MeasureXML[] {
-    const measure = partXML.measure;
-    if (isArray(measure)) return measure
-    if (isObject(measure)) return [measure]
-    return []
   }
 
   getNoteById(id: string): Note | null {

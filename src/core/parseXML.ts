@@ -1,7 +1,7 @@
 import { XMLParser } from 'fast-xml-parser'
 import { MusicXML } from '@/types'
 
-function removeGPTags(str) {
+function removeGPTags(str: string) {
   const xmlTagPattern = /<\?xml[^?]*\?>/g
   while (xmlTagPattern.test(str)) {
     str = str.replace(xmlTagPattern, '')

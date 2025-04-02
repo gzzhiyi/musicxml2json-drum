@@ -9,7 +9,7 @@
     "target": "esnext", // 编译目标
     "module": "esnext", // 模块类型
     "moduleResolution": "node", // 指定 TypeScript 的模块解析策略
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "allowJs": false, // 是否编辑js文件
     "strict": true, // 严格模式
     "noUnusedLocals": false, // 未使用变量报错

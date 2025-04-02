@@ -32,7 +32,6 @@ export default class Note implements NoteInterface {
   public data: NoteData[] | null = null
   public dot: Dot | null = null
   public id: string
-  public name: string = ''
   public notations: Notations = { slur: null, tied: null, tuplet: null }
   public stem: Stem | null = null
   public time: Time | null = null
@@ -64,7 +63,7 @@ export default class Note implements NoteInterface {
     return isArray(beam) ? beam.map(item => item['#text']) : [beam['#text']]
   }
 
-  private getCode(noteXML): number | null {
+  private getCode(noteXML: NoteXML): number | null {
     return noteXML?.notations?.technical?.fret || noteXML?.notations?.technical?.root?.fret || null
   }
 
@@ -76,7 +75,7 @@ export default class Note implements NoteInterface {
     }
 
     const instrument = getInstrument(code, this.id) // 获取乐器对应配置
-    return instrument
+    return instrument || null
   }
 
   private getDot(noteXML: NoteXML): Dot | null {

@@ -11,18 +11,18 @@ import {
 } from '@/types'
 
 type PropsType = {
-  beats: number
-  beatType: number
-  beatUnit: number
-  bpm: number
+  divisions: number
   id: string
   isLast: boolean
+  metronome: Metronome
   speed: number
   startTime: number
+  timeSignature: TimeSignature
   xmlData: MeasureXML
 }
 
 export default class Measure {
+  public divisions: number
   public metronome: Metronome
   public notes: Note[]
   public number: string
@@ -35,25 +35,25 @@ export default class Measure {
   private startTime: number
 
   constructor({
+    divisions,
     id,
     xmlData,
     startTime,
-    beatUnit,
-    bpm,
-    beats,
-    beatType,
     isLast,
-    speed
+    metronome,
+    speed,
+    timeSignature
   }: PropsType) {
     // Props
+    this.divisions = divisions
     this.id = id
     this.isLast = isLast
     this.startTime = startTime
     this.speed = speed || 1
 
     // Prototypes
-    this.metronome = { beatUnit, bpm }
-    this.timeSignature = { beats, beatType }
+    this.metronome = metronome
+    this.timeSignature = timeSignature
     this.number = this.getNumber(xmlData)
     this.notes = this.getNotes(xmlData)
   }
