@@ -75,7 +75,7 @@ export default class Measure {
     notesXML.forEach((noteXML) => {
       if (this.isChord(noteXML)) {
         const lastNote = notesList[notesList.length - 1]
-        lastNote.view = 'chord'
+        lastNote.kind = 'chord'
         const data = lastNote.getData(noteXML)
         data && lastNote.appendData(data)
       } else {
@@ -118,7 +118,7 @@ export default class Measure {
   }
 
   private calNoteDuration(note: Note): number {
-    const { view, type, timeModification, notations, dot } = note
+    const { kind, type, timeModification, notations, dot } = note
 
     if (!type) {
       return 0
@@ -128,7 +128,7 @@ export default class Measure {
     const { beats, beatType } = this.timeSignature
 
     const beatTime = Math.floor(60 / bpm / (beatType / beatUnit) * 1000)
-    let duration = view === 'rest' && type === 'whole' ? beatTime * beats : (beatType / noteTypeToNumber(type)) * beatTime
+    let duration = kind === 'rest' && type === 'whole' ? beatTime * beats : (beatType / noteTypeToNumber(type)) * beatTime
 
     if (!isEmpty(timeModification)) {
       const { tuplet } = notations

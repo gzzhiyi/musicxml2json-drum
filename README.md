@@ -81,6 +81,9 @@ const note = parser.getNoteById('N_1');
 
 [完整 API 文档](https://hezhiyi.com/docs/zh/musicxml2json-drum/guide/)
 
+## Demo
+[Demo](https://hezhiyi.com/demos/#/musicxml2json_drum)
+
 ## GitHub
 
 [GitHub 仓库](https://github.com/gzzhiyi/musicxml2json-drum.git)

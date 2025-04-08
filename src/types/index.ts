@@ -110,12 +110,12 @@ export type Note = {
   data: NoteData[] | null
   dot: Dot | null
   id: string
+  kind: NoteKind
   notations: Notations
   stem: Stem | null
   time: Time | null
   timeModification: TimeModification | null
   type: NoteType
-  view: NoteKind
 }
 
 export interface NoteData {

@@ -17,7 +17,7 @@ export default class Note implements NoteInterface {
     time: Time | null;
     timeModification: TimeModification | null;
     type: NoteType;
-    view: NoteKind;
+    kind: NoteKind;
     constructor({ id, xmlData }: PropsType);
     private getBeam;
     private getCode;

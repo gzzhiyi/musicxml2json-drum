@@ -37,7 +37,7 @@ export default class Note implements NoteInterface {
   public time: Time | null = null
   public timeModification: TimeModification | null = null
   public type: NoteType
-  public view: NoteKind
+  public kind: NoteKind
 
   constructor ({ id, xmlData }: PropsType) {
     this.id = id
@@ -49,9 +49,9 @@ export default class Note implements NoteInterface {
       this.stem = this.getStem(xmlData)
       this.timeModification = this.getTimeModification(xmlData)
       this.type = this.getType(xmlData)
-      this.view = this.getView(xmlData)
+      this.kind = this.getView(xmlData)
     } else {
-      this.view = 'rest'
+      this.kind = 'rest'
       this.type = 'whole'
     }
   }
