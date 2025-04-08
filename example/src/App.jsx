@@ -60,6 +60,7 @@ export default function App() {
       }
 
       setParsedData(removeUnderscoreKeys(result)) // 存储解析后的 JSON
+      console.log(result.getNoteById('N_9_1'))
     }
   }, [xmlContent])
 
