@@ -19232,41 +19232,49 @@
 	    return parser.parse(cleanedStr);
 	}
 
+	const noteTypeMap = {
+	    'whole': 1,
+	    'half': 2,
+	    'quarter': 4,
+	    'eighth': 8,
+	    '16th': 16,
+	    '32nd': 32,
+	    '64th': 64,
+	    '128th': 128
+	};
+	const numberToNoteTypeMap = {
+	    1: 'whole',
+	    2: 'half',
+	    4: 'quarter',
+	    8: 'eighth',
+	    16: '16th',
+	    32: '32nd',
+	    64: '64th',
+	    128: '128th'
+	};
+	function logInvalidNoteType(type) {
+	    console.warn(`Note type [${type}] is invalid.`);
+	}
 	function noteTypeToNumber(type) {
-	    const types = {
-	        'whole': 1,
-	        'half': 2,
-	        'quarter': 4,
-	        'eighth': 8,
-	        '16th': 16,
-	        '32nd': 32,
-	        '64th': 64
-	    };
-	    if (!types[type]) {
-	        console.warn(`Note type [${type}] is invalid.`);
+	    const number = noteTypeMap[type];
+	    if (number === undefined) {
+	        logInvalidNoteType(type);
+	        return -1;
 	    }
-	    return types[type];
+	    return number;
 	}
 	function numberToNoteType(num) {
-	    const types = {
-	        1: 'whole',
-	        2: 'half',
-	        4: 'quarter',
-	        8: 'eighth',
-	        16: '16th',
-	        32: '32nd',
-	        64: '64th'
-	    };
-	    if (!(num in types)) {
-	        console.warn(`Note type [${num}] is invalid.`);
+	    const type = numberToNoteTypeMap[num];
+	    if (type === undefined) {
+	        logInvalidNoteType(num);
 	        return undefined;
 	    }
-	    return types[num];
+	    return type;
 	}
 	function getInstrument(code, noteId) {
 	    const instrument = globalThis.InstrumentConfig?.[code];
 	    if (!instrument) {
-	        console.warn(`[${noteId}]Instrument ${code} is not a vaild code!`);
+	        console.warn(`[${noteId}] Instrument ${code} is not a valid code!`);
 	        return undefined;
 	    }
 	    return instrument;
@@ -19327,7 +19335,7 @@
 	        return 'dot';
 	    }
 	    getView(noteXML) {
-	        return lodash.exports.has(noteXML, 'rest') ? 'rest' : 'single';
+	        return lodash.exports.has(noteXML, 'rest') ? 'rest' : 'note';
 	    }
 	    getNotations(noteXML) {
 	        return {
@@ -19537,14 +19545,18 @@
 	    constructor(props) {
 	        const { debug, instrumentConfig, speed, xmlStr } = props;
 	        if (!fxp.XMLValidator.validate(xmlStr)) {
-	            console.error('Not valid file type.');
+	            console.error('Invalid XML format.');
 	            return;
 	        }
 	        globalThis.InstrumentConfig = instrumentConfig;
 	        this._debug = debug ?? this._debug;
 	        this._oriXml = parseXML(xmlStr) || {};
+	        if (!this._oriXml) {
+	            console.error('Failed to parse XML data.');
+	            return;
+	        }
 	        this._speed = speed ?? this._speed;
-	        this.parts = this.getParts(this._oriXml).map((part) => {
+	        this.parts = this.getParts(this._oriXml)?.map((part) => {
 	            const measures = this.getMeasures(part);
 	            return new Part({ measures, speed });
 	        });

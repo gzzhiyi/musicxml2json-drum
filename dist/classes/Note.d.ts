@@ -1,4 +1,4 @@
-import { Beam, Dot, Notations, Note as NoteT, NoteData, NoteType, NoteView, NoteXML, Stem, Time, TimeModification } from '@/types';
+import { Beam, Dot, Notations, Note as NoteT, NoteData, NoteType, NoteKind, NoteXML, Stem, Time, TimeModification } from '@/types';
 type PropsType = {
     id: string;
     xmlData?: NoteXML;
@@ -17,7 +17,7 @@ export default class Note implements NoteInterface {
     time: Time | null;
     timeModification: TimeModification | null;
     type: NoteType;
-    view: NoteView;
+    view: NoteKind;
     constructor({ id, xmlData }: PropsType);
     private getBeam;
     private getCode;

@@ -7,7 +7,7 @@ import {
   Note as NoteT,
   NoteData,
   NoteType,
-  NoteView,
+  NoteKind,
   NoteXML,
   Slur,
   Stem,
@@ -37,7 +37,7 @@ export default class Note implements NoteInterface {
   public time: Time | null = null
   public timeModification: TimeModification | null = null
   public type: NoteType
-  public view: NoteView
+  public view: NoteKind
 
   constructor ({ id, xmlData }: PropsType) {
     this.id = id
@@ -92,8 +92,8 @@ export default class Note implements NoteInterface {
     return 'dot'
   }
 
-  private getView(noteXML: NoteXML): NoteView {
-    return has(noteXML, 'rest') ? 'rest' : 'single'
+  private getView(noteXML: NoteXML): NoteKind {
+    return has(noteXML, 'rest') ? 'rest' : 'note'
   }
 
   private getNotations(noteXML: NoteXML): Notations {

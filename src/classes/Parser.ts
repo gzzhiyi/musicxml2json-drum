@@ -28,7 +28,7 @@ export default class Parser {
   public title: string = ''
 
   private _debug: boolean = false
-  private _oriXml: MusicXML | {} = {}
+  private _oriXml: MusicXML | null = {}
   private _speed: number = 1
 
   constructor(props: PropsType) {
@@ -40,7 +40,7 @@ export default class Parser {
     } = props
 
     if (!XMLValidator.validate(xmlStr)) {
-      console.error('Not valid file type.')
+      console.error('Invalid XML format.')
       return
     }
 
@@ -48,10 +48,16 @@ export default class Parser {
 
     // Original data
     this._debug = debug ?? this._debug
+
     this._oriXml = parseXML(xmlStr) || {}
+    if (!this._oriXml) {
+      console.error('Failed to parse XML data.')
+      return
+    }
+
     this._speed = speed ?? this._speed
 
-    this.parts = this.getParts(this._oriXml).map((part) => {
+    this.parts = this.getParts(this._oriXml)?.map((part) => {
       const measures = this.getMeasures(part)
       return new PartClass({ measures, speed })
     })

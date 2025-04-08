@@ -1,24 +1,5 @@
 /**
- * Basic
- */
-export type Beam = 'begin' | 'continue' | 'end' | 'forward hook' | 'backward hook'
-
-export type Dot = 'dot' | 'doubleDot'
-
-export type NoteType = 'whole' | 'half' | 'quarter' | 'eighth' | '16th' | '32nd' | '64th'
-
-export type NoteView = 'single' | 'chord' | 'rest'
-
-export type Slur = 'start' | 'continue' | 'end'
-
-export type Stem = 'up' | 'down'
-
-export type Tied = 'start' | 'continue' | 'stop'
-
-export type Tuplet = 'start' | 'stop'
-
-/**
- * XML
+ * MusicXML 原始数据
  */
 export type MusicXML = {
   'score-partwise'?: PartwiseXML
@@ -36,7 +17,7 @@ export type PartXML = {
 }
 
 type ClefXML = {
-  sign: string
+  sign: 'percussion' | string
   _number: string
 }
 
@@ -59,6 +40,53 @@ export type MeasureXML = {
 
 export type NoteXML = {
   [propName: string]: any
+}
+
+/**
+ * Basic
+ */
+export type Beam = 'begin' | 'continue' | 'end'
+
+export type Dot = 'dot' | 'doubleDot' | 'tripleDot' // '附点' | '双附点' | '三附点'
+
+export type NoteType = 'whole' | 'half' | 'quarter' | 'eighth' | '16th' | '32nd' | '64th' | '128th'
+
+export type NoteKind = 'note' | 'chord' | 'rest'
+
+export type Slur = 'start' | 'continue' | 'stop'
+
+export type Stem = 'up' | 'down'
+
+export type Tied = 'start' | 'continue' | 'stop'
+
+export type Tuplet = 'start' | 'stop'
+
+export type Notations = {
+  slur: Slur | null // 连奏
+  tied: Tied | null // 延音
+  tuplet: Tuplet | null // 分组
+}
+
+export type TimeModification = {
+  actualNotes: number
+  normalNotes: number
+}
+
+export type Metronome = {
+  beatUnit: number
+  bpm: number
+}
+
+export type TimeSignature = {
+  beats: number
+  beatType: number
+}
+
+export type Instrument = {
+  code: number
+  name: string
+  value: number[]
+  index: number
 }
 
 export type Part = {
@@ -87,7 +115,7 @@ export type Note = {
   time: Time | null
   timeModification: TimeModification | null
   type: NoteType
-  view: NoteView
+  view: NoteKind
 }
 
 export interface NoteData {
@@ -101,32 +129,4 @@ export interface Time {
   start: number
   duration: number
   end: number
-}
-
-export type Notations = {
-  slur: Slur | null
-  tied: Tied | null
-  tuplet: Tuplet | null
-}
-
-export type TimeModification = {
-  actualNotes: number
-  normalNotes: number
-}
-
-export type Metronome = {
-  beatUnit: number
-  bpm: number
-}
-
-export type TimeSignature = {
-  beats: number
-  beatType: number
-}
-
-export type Instrument = {
-  code: number
-  name: string
-  value: number[]
-  index: number
 }
