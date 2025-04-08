@@ -1,7 +1,7 @@
 /**
  * Basic
  */
-export type Beam = 'begin' | 'continue' | 'end'
+export type Beam = 'begin' | 'continue' | 'end' | 'forward hook' | 'backward hook'
 
 export type Dot = 'dot' | 'doubleDot'
 
@@ -61,6 +61,35 @@ export type NoteXML = {
   [propName: string]: any
 }
 
+export type Part = {
+  duration: number
+  measures: Measure[]
+}
+
+export type Measure = {
+  divisions: number
+  id: string
+  isLast: boolean
+  metronome: Metronome
+  notes: Note[]
+  number: string
+  time: Time | null
+  timeSignature: TimeSignature
+}
+
+export type Note = {
+  beam: Beam[] | null
+  data: NoteData[] | null
+  dot: Dot | null
+  id: string
+  notations: Notations
+  stem: Stem | null
+  time: Time | null
+  timeModification: TimeModification | null
+  type: NoteType
+  view: NoteView
+}
+
 export interface NoteData {
   index: number
   code: number
@@ -85,19 +114,6 @@ export type TimeModification = {
   normalNotes: number
 }
 
-export type Note = {
-  beam: Beam[] | null
-  data: NoteData[] | null
-  dot: Dot | null
-  id: string
-  notations: Notations
-  stem: Stem | null
-  time: Time | null
-  timeModification: TimeModification | null
-  type: NoteType
-  view: NoteView
-}
-
 export type Metronome = {
   beatUnit: number
   bpm: number
@@ -106,22 +122,6 @@ export type Metronome = {
 export type TimeSignature = {
   beats: number
   beatType: number
-}
-
-export type Measure = {
-  divisions: number
-  id: string
-  isLast: boolean
-  metronome: Metronome
-  notes: Note[]
-  number: string
-  time: Time | null
-  timeSignature: TimeSignature
-}
-
-export type Part = {
-  duration: number
-  measures: Measure[]
 }
 
 export type Instrument = {
