@@ -28,6 +28,6 @@
     "**/*.spec.ts",
     "node_modules",
     "dist",
-    "demos"
+    "example"
   ]
 }
