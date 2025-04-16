@@ -1,6 +1,6 @@
 {
   "name": "musicxml2json-drum",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": "hezhiyi",
   "license": "MIT",
   "description": "MusicXML to JSON for drum.",

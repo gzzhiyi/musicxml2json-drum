@@ -1,16 +1,17 @@
-import MeasureClass from '@/classes/Measure';
-import { MeasureXML, Metronome, TimeSignature } from '@/types';
+import Measure from '@/classes/Measure';
+import { MeasureXML as MeasureXmlType, Metronome as MetronomeType, TimeSignature as TimeSignatureType } from '@/types';
 type PropsType = {
-    measures: MeasureXML[];
+    measures: MeasureXmlType[];
+    partId: string;
     speed?: number;
 };
 export default class Part {
     duration: number;
-    measures: MeasureClass[];
-    metronome: Metronome;
-    timeSignature: TimeSignature;
-    constructor({ measures, speed }: PropsType);
-    private getDivisions;
+    measures: Measure[];
+    metronome: MetronomeType;
+    sign: string;
+    timeSignature: TimeSignatureType;
+    constructor({ measures, partId, speed }: PropsType);
     private getMetronome;
     private getTimeSignature;
     private setGlobalMetronome;

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import _ from 'lodash'
 import ReactJson from 'react-json-view'
 import { Parser } from '../../dist/index.esm.js'
+import './App.css'
 
 const configs = {
   36: { code: 36, name: 'Kick', value: [36], index: 0 },

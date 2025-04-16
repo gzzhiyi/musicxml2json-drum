@@ -6,29 +6,29 @@ import {
 } from 'lodash'
 import { XMLValidator } from 'fast-xml-parser'
 import parseXML from '@/core/parseXML'
-import PartClass from '@/classes/Part'
+import Part from '@/classes/Part'
 import {
-  MusicXML,
-  PartXML,
-  MeasureXML,
-  Measure,
-  Note,
-  Instrument
+  MusicXML as MusicXmlType,
+  PartXML as PartXmlType,
+  MeasureXML as MeasureXmlType,
+  Measure as MeasureType,
+  Note as NoteType,
+  Instrument as InstrumentType
 } from '@/types'
 
 type PropsType = {
   debug?: boolean
   speed?: number
-  instrumentConfig: Record<number, Instrument>,
+  instrumentConfig: Record<number, InstrumentType>,
   xmlStr: string
 }
 
 export default class Parser {
-  public parts: PartClass[] = []
+  public parts: Part[] = []
   public title: string = ''
 
   private _debug: boolean = false
-  private _oriXml: MusicXML | null = {}
+  private _oriXml: MusicXmlType | null = {}
   private _speed: number = 1
 
   constructor(props: PropsType) {
@@ -59,7 +59,7 @@ export default class Parser {
 
     this.parts = this.getParts(this._oriXml)?.map((part) => {
       const measures = this.getMeasures(part)
-      return new PartClass({ measures, speed })
+      return new Part({ measures, partId: part._id, speed })
     })
 
     this.title = this.getTitle(this._oriXml)
@@ -68,11 +68,11 @@ export default class Parser {
     this._debug && console.log(this)
   }
 
-  private getTitle(musicXml: MusicXML): string {
+  private getTitle(musicXml: MusicXmlType): string {
     return musicXml['score-partwise']?.work?.['work-title'] ?? ''
   }
 
-  private filterParts(parts: PartXML[]): PartXML[] {
+  private filterParts(parts: PartXmlType[]): PartXmlType[] {
     return parts.filter(part => {
       const measure = part.measure
       const firstMeasure = isArray(measure) ? measure[0] : isObject(measure) ? measure : null
@@ -80,22 +80,22 @@ export default class Parser {
     })
   }
 
-  private getParts(xml: MusicXML): PartXML[] {
+  private getParts(xml: MusicXmlType): PartXmlType[] {
     const partXML = xml?.['score-partwise']?.part
     if (!partXML || isEmpty(partXML)) return []
 
-    const parts: PartXML[] = isArray(partXML) ? partXML : [partXML]
+    const parts: PartXmlType[] = isArray(partXML) ? partXML : [partXML]
     return this.filterParts(parts)
   }
 
-  private getMeasures(partXML: PartXML): MeasureXML[] {
+  private getMeasures(partXML: PartXmlType): MeasureXmlType[] {
     const measure = partXML.measure;
     if (isArray(measure)) return measure
     if (isObject(measure)) return [measure]
     return []
   }
 
-  getMeasureById(id: string): Measure | null {
+  getMeasureById(id: string): MeasureType | null {
     for (const part of this.parts) {
       const measure = find(part.measures, { id })
       if (measure) {
@@ -106,7 +106,7 @@ export default class Parser {
     return null
   }
 
-  getNoteById(id: string): Note | null {
+  getNoteById(id: string): NoteType | null {
     const allNotes = this.parts.flatMap(part =>
       part.measures.flatMap(measure => measure.notes)
     )

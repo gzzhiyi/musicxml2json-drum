@@ -1,22 +1,26 @@
 import { isArray, isEmpty } from 'lodash'
 import { noteTypeToNumber } from '@/utils'
-import MeasureClass from '@/classes/Measure'
-import { MeasureXML, Metronome, TimeSignature } from '@/types'
+import Measure from '@/classes/Measure'
+import {
+  MeasureXML as MeasureXmlType,
+  Metronome as MetronomeType,
+  TimeSignature as TimeSignatureType
+} from '@/types'
 
 type PropsType = {
-  measures: MeasureXML[]
+  measures: MeasureXmlType[]
+  partId: string
   speed?: number
 }
 
 export default class Part {
   public duration: number = 0
-  public measures: MeasureClass[] = []
-  public metronome: Metronome = { beatUnit: 4, bpm: 60 }
-  public timeSignature: TimeSignature = { beats: 4, beatType: 4 }
+  public measures: Measure[] = []
+  public metronome: MetronomeType = { beatUnit: 4, bpm: 60 }
+  public sign: string = 'percussion'
+  public timeSignature: TimeSignatureType = { beats: 4, beatType: 4 }
 
-  constructor({ measures, speed }: PropsType) {
-    let globalDivisions = 1
-
+  constructor({ measures, partId, speed }: PropsType) {
     measures.forEach((measure, index) => {
       const metronome = this.getMetronome(measure)
       metronome && this.setGlobalMetronome(metronome)
@@ -24,13 +28,11 @@ export default class Part {
       const timeSignature = this.getTimeSignature(measure)
       timeSignature && this.setGlobalTimeSignature(timeSignature)
 
-      globalDivisions = this.getDivisions(measure) || globalDivisions
-
-      const measureClass = new MeasureClass({
-        divisions: globalDivisions,
+      const measureClass = new Measure({
         id: `M_${index + 1}`,
         isLast: index === measures.length - 1,
         metronome: this.metronome,
+        partId,
         speed: speed || 1,
         startTime: this.duration,
         timeSignature: this.timeSignature,
@@ -42,11 +44,7 @@ export default class Part {
     })
   }
 
-  private getDivisions(measureXML: MeasureXML): number | null {
-    return measureXML?.attributes?.divisions || null
-  }
-
-  private getMetronome(measureXML: MeasureXML): Metronome | null {
+  private getMetronome(measureXML: MeasureXmlType): MetronomeType | null {
     const directions = isArray(measureXML?.direction) ? measureXML.direction : [measureXML?.direction]
 
     for (const item of directions) {
@@ -63,7 +61,7 @@ export default class Part {
     return null
   }
 
-  private getTimeSignature(measureXML: MeasureXML): TimeSignature | null {
+  private getTimeSignature(measureXML: MeasureXmlType): TimeSignatureType | null {
     const timeXML = measureXML?.attributes?.time
 
     return isEmpty(timeXML) ? null : {
@@ -72,11 +70,11 @@ export default class Part {
     }
   }
 
-  private setGlobalMetronome({ beatUnit, bpm }: Metronome) {
+  private setGlobalMetronome({ beatUnit, bpm }: MetronomeType) {
     this.metronome = { beatUnit, bpm }
   }
 
-  private setGlobalTimeSignature({ beats, beatType }: TimeSignature) {
+  private setGlobalTimeSignature({ beats, beatType }: TimeSignatureType) {
     this.timeSignature = { beats, beatType }
   }
 }

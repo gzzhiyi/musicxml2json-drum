@@ -1,5 +1,6 @@
 import { Beam, Dot, Notations, Note as NoteT, NoteData, NoteType, NoteKind, NoteXML, Stem, Time, TimeModification } from '@/types';
 type PropsType = {
+    measureId: string;
     id: string;
     xmlData?: NoteXML;
 };
@@ -12,13 +13,14 @@ export default class Note implements NoteInterface {
     data: NoteData[] | null;
     dot: Dot | null;
     id: string;
+    measureId: string;
     notations: Notations;
     stem: Stem | null;
     time: Time | null;
     timeModification: TimeModification | null;
     type: NoteType;
     kind: NoteKind;
-    constructor({ id, xmlData }: PropsType);
+    constructor({ id, measureId, xmlData }: PropsType);
     private getBeam;
     private getCode;
     getData(noteXML: NoteXML): NoteData | null;

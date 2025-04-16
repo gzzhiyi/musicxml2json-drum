@@ -1,26 +1,26 @@
 import { MeasureXML, Metronome, Note, Time, TimeSignature } from '@/types';
 type PropsType = {
-    divisions: number;
     id: string;
     isLast: boolean;
     metronome: Metronome;
+    partId: string;
     speed: number;
     startTime: number;
     timeSignature: TimeSignature;
     xmlData: MeasureXML;
 };
 export default class Measure {
-    divisions: number;
+    id: string;
+    isLast: boolean;
     metronome: Metronome;
     notes: Note[];
     number: string;
-    id: string;
-    isLast: boolean;
+    partId: string;
     time: Time | null;
     timeSignature: TimeSignature;
     private speed;
     private startTime;
-    constructor({ divisions, id, xmlData, startTime, isLast, metronome, speed, timeSignature }: PropsType);
+    constructor({ id, isLast, metronome, partId, speed, startTime, timeSignature, xmlData }: PropsType);
     private getNotes;
     private addNoteToList;
     private getNumber;

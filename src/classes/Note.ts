@@ -18,6 +18,7 @@ import {
 } from '@/types'
 
 type PropsType = {
+  measureId: string
   id: string
   xmlData?: NoteXML
 }
@@ -32,6 +33,7 @@ export default class Note implements NoteInterface {
   public data: NoteData[] | null = null
   public dot: Dot | null = null
   public id: string
+  public measureId: string
   public notations: Notations = { slur: null, tied: null, tuplet: null }
   public stem: Stem | null = null
   public time: Time | null = null
@@ -39,8 +41,9 @@ export default class Note implements NoteInterface {
   public type: NoteType
   public kind: NoteKind
 
-  constructor ({ id, xmlData }: PropsType) {
+  constructor ({ id, measureId, xmlData }: PropsType) {
     this.id = id
+    this.measureId = measureId
 
     if (xmlData) {
       this.beam = this.getBeam(xmlData)
@@ -86,10 +89,10 @@ export default class Note implements NoteInterface {
     const { dot } = noteXML
 
     if (isArray(dot)) {
-      return dot.length >= 2 ? 'doubleDot' : 'dot'
+      return dot.length >= 2 ? 'double' : 'triple'
     }
 
-    return 'dot'
+    return 'single'
   }
 
   private getView(noteXML: NoteXML): NoteKind {

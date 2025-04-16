@@ -1,13 +1,13 @@
-import PartClass from '@/classes/Part';
-import { Measure, Note, Instrument } from '@/types';
+import Part from '@/classes/Part';
+import { Measure as MeasureType, Note as NoteType, Instrument as InstrumentType } from '@/types';
 type PropsType = {
     debug?: boolean;
     speed?: number;
-    instrumentConfig: Record<number, Instrument>;
+    instrumentConfig: Record<number, InstrumentType>;
     xmlStr: string;
 };
 export default class Parser {
-    parts: PartClass[];
+    parts: Part[];
     title: string;
     private _debug;
     private _oriXml;
@@ -17,7 +17,7 @@ export default class Parser {
     private filterParts;
     private getParts;
     private getMeasures;
-    getMeasureById(id: string): Measure | null;
-    getNoteById(id: string): Note | null;
+    getMeasureById(id: string): MeasureType | null;
+    getNoteById(id: string): NoteType | null;
 }
 export {};

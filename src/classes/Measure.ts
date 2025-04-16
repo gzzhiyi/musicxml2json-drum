@@ -11,10 +11,10 @@ import {
 } from '@/types'
 
 type PropsType = {
-  divisions: number
   id: string
   isLast: boolean
   metronome: Metronome
+  partId: string
   speed: number
   startTime: number
   timeSignature: TimeSignature
@@ -22,12 +22,12 @@ type PropsType = {
 }
 
 export default class Measure {
-  public divisions: number
+  public id: string
+  public isLast: boolean
   public metronome: Metronome
   public notes: Note[]
   public number: string
-  public id: string
-  public isLast: boolean
+  public partId: string
   public time: Time | null = null
   public timeSignature: TimeSignature
 
@@ -35,27 +35,27 @@ export default class Measure {
   private startTime: number
 
   constructor({
-    divisions,
     id,
-    xmlData,
-    startTime,
     isLast,
     metronome,
+    partId,
     speed,
-    timeSignature
+    startTime,
+    timeSignature,
+    xmlData
   }: PropsType) {
     // Props
-    this.divisions = divisions
     this.id = id
     this.isLast = isLast
-    this.startTime = startTime
-    this.speed = speed || 1
-
-    // Prototypes
     this.metronome = metronome
+    this.partId = partId
     this.timeSignature = timeSignature
+
     this.number = this.getNumber(xmlData)
     this.notes = this.getNotes(xmlData)
+
+    this.startTime = startTime
+    this.speed = speed || 1
   }
 
   private getNotes(measureXML: MeasureXML): Note[] {
@@ -64,7 +64,8 @@ export default class Measure {
 
     if (isEmpty(measureXML?.note)) { // 如果小节音符为空，自动补全音符
       const noteClass = new NoteClass({
-        id: `N_${this.number}_${count}`
+        id: `N_${this.number}_${count}`,
+        measureId: this.id
       })
 
       this.addNoteToList(noteClass, notesList)
@@ -81,6 +82,7 @@ export default class Measure {
       } else {
         const noteClass = new NoteClass({
           id: `N_${this.number}_${count}`,
+          measureId: this.id,
           xmlData: noteXML
         })
 
@@ -138,10 +140,12 @@ export default class Measure {
       duration = Math.floor(duration * normalNotes * radix)
     }
 
-    if (dot === 'dot') {
+    if (dot === 'single') {
       duration = Math.floor(duration * 1.5)
-    } else if (dot === 'doubleDot') {
+    } else if (dot === 'double') {
       duration = Math.floor(duration * 1.75)
+    } else if (dot === 'triple') {
+      duration = Math.floor(duration * 1.875)
     }
 
     return Math.round(duration / this.speed)
