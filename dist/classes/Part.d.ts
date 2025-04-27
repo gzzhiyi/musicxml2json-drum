@@ -10,6 +10,7 @@ export default class Part {
     measures: Measure[];
     metronome: MetronomeType;
     sign: string;
+    speed: number;
     timeSignature: TimeSignatureType;
     constructor({ measures, partId, speed }: PropsType);
     private getMetronome;

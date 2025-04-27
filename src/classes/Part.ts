@@ -14,13 +14,17 @@ type PropsType = {
 }
 
 export default class Part {
-  public duration: number = 0
+  public duration = 0
   public measures: Measure[] = []
   public metronome: MetronomeType = { beatUnit: 4, bpm: 60 }
-  public sign: string = 'percussion'
+  public sign = 'percussion'
+  public speed: number
   public timeSignature: TimeSignatureType = { beats: 4, beatType: 4 }
 
   constructor({ measures, partId, speed }: PropsType) {
+    this.speed = speed || 1
+    globalThis.speed = this.speed
+
     measures.forEach((measure, index) => {
       const metronome = this.getMetronome(measure)
       metronome && this.setGlobalMetronome(metronome)
@@ -33,7 +37,6 @@ export default class Part {
         isLast: index === measures.length - 1,
         metronome: this.metronome,
         partId,
-        speed: speed || 1,
         startTime: this.duration,
         timeSignature: this.timeSignature,
         xmlData: measure

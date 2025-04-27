@@ -4,7 +4,6 @@ type PropsType = {
     isLast: boolean;
     metronome: Metronome;
     partId: string;
-    speed: number;
     startTime: number;
     timeSignature: TimeSignature;
     xmlData: MeasureXML;
@@ -18,9 +17,9 @@ export default class Measure {
     partId: string;
     time: Time | null;
     timeSignature: TimeSignature;
-    private speed;
-    private startTime;
-    constructor({ id, isLast, metronome, partId, speed, startTime, timeSignature, xmlData }: PropsType);
+    private currentTime;
+    private currentDuration;
+    constructor({ id, isLast, metronome, partId, startTime, timeSignature, xmlData }: PropsType);
     private getNotes;
     private addNoteToList;
     private getNumber;

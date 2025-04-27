@@ -1,5 +1,6 @@
-import { Instrument } from '@/types'
+import { InstrumentConfig } from '@/types'
 
 declare global {
-  var InstrumentConfig: Record<number, Instrument> | undefined
+  var InstrumentConfig: Record<number, InstrumentConfig> | undefined
+  var speed: number
 }

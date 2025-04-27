@@ -54,7 +54,7 @@ export function getInstrument(code: number, noteId?: string): NoteData | undefin
   const instrument = globalThis.InstrumentConfig?.[code]
 
   if (!instrument) {
-    console.warn(`[${noteId}] Instrument ${code} is not a valid code!`)
+    console.warn(`[${noteId}] InstrumentConfig ${code} is not a valid code!`)
     return undefined
   }
 

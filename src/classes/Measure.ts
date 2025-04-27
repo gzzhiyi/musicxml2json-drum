@@ -15,7 +15,6 @@ type PropsType = {
   isLast: boolean
   metronome: Metronome
   partId: string
-  speed: number
   startTime: number
   timeSignature: TimeSignature
   xmlData: MeasureXML
@@ -31,15 +30,14 @@ export default class Measure {
   public time: Time | null = null
   public timeSignature: TimeSignature
 
-  private speed: number
-  private startTime: number
+  private currentTime: number = 0
+  private currentDuration: number = 0
 
   constructor({
     id,
     isLast,
     metronome,
     partId,
-    speed,
     startTime,
     timeSignature,
     xmlData
@@ -51,11 +49,10 @@ export default class Measure {
     this.partId = partId
     this.timeSignature = timeSignature
 
+    this.currentTime = startTime
+
     this.number = this.getNumber(xmlData)
     this.notes = this.getNotes(xmlData)
-
-    this.startTime = startTime
-    this.speed = speed || 1
   }
 
   private getNotes(measureXML: MeasureXML): Note[] {
@@ -97,18 +94,19 @@ export default class Measure {
     return notesList
   }
 
-  private addNoteToList(noteClass: NoteClass, notesList: NoteClass[]) {
-    const startTime = this.time?.start || this.startTime
-    const duration = this.calNoteDuration(noteClass)
+  private addNoteToList(note: NoteClass, notesList: NoteClass[]): void {
+    const noteDuration = this.calNoteDuration(note)
+
+    note.appendTime(this.currentDuration, noteDuration)
+    notesList.push(note)
+
+    this.currentDuration += noteDuration
 
     this.time = {
-      start: startTime + duration,
-      duration: (this.time?.duration || 0) + duration,
-      end: startTime + duration
+      start: this.currentTime,
+      duration: this.currentDuration,
+      end: this.currentTime + this.currentDuration
     }
-
-    noteClass.appendTime(startTime, duration)
-    notesList.push(noteClass)
   }
 
   private getNumber(measureXML: MeasureXML): string {
@@ -122,32 +120,40 @@ export default class Measure {
   private calNoteDuration(note: Note): number {
     const { kind, type, timeModification, notations, dot } = note
 
-    if (!type) {
-      return 0
-    }
+    if (!type) return 0
 
     const { beatUnit, bpm } = this.metronome
     const { beats, beatType } = this.timeSignature
 
-    const beatTime = Math.floor(60 / bpm / (beatType / beatUnit) * 1000)
-    let duration = kind === 'rest' && type === 'whole' ? beatTime * beats : (beatType / noteTypeToNumber(type)) * beatTime
+    // 每拍的时间（毫秒）
+    const beatTime = 60000 / bpm / (beatType / beatUnit)
 
-    if (!isEmpty(timeModification)) {
-      const { tuplet } = notations
+    // 计算基础时值
+    let duration = kind === 'rest' && type === 'whole'
+      ? beatTime * beats
+      : (beatType / noteTypeToNumber(type)) * beatTime
+
+    // 如果是连音组
+    if (timeModification) {
       const { actualNotes, normalNotes } = timeModification
-      const radix = tuplet === 'stop' ? (Math.floor(100 / actualNotes) + (100 % actualNotes)) / 100 : Math.floor(100 / actualNotes) / 100
+      const isTupletStop = notations?.tuplet === 'stop'
+      const ratio = actualNotes / normalNotes
 
-      duration = Math.floor(duration * normalNotes * radix)
+      // 如果是 tuplet stop，通常需要还原比例
+      duration *= isTupletStop ? 1 / ratio : ratio
     }
 
-    if (dot === 'single') {
-      duration = Math.floor(duration * 1.5)
-    } else if (dot === 'double') {
-      duration = Math.floor(duration * 1.75)
-    } else if (dot === 'triple') {
-      duration = Math.floor(duration * 1.875)
+    // 加点音处理
+    const dotMap = {
+      single: 1.5,
+      double: 1.75,
+      triple: 1.875
+    } as const
+
+    if (dot && dotMap[dot]) {
+      duration *= dotMap[dot]
     }
 
-    return Math.round(duration / this.speed)
+    return Math.floor(duration / (globalThis.speed || 1))
   }
 }

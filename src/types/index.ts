@@ -152,7 +152,7 @@ export type TimeSignature = {
  */
 
 // 乐器配置
-export type Instrument = {
+export type InstrumentConfig = {
   code: number
   name: string
   value: number[]
