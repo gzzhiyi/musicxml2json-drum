@@ -47,7 +47,7 @@ console.log(jsonData);
 const config = {
   debug: true,
   speed: 120,
-  instrumentConfig: {
+  instruments: {
     36: { code: 36, name: 'Kick', value: [36], index: 0 },
     37: { code: 37, name: 'Snare', value: [37], index: 1 },
     38: { code: 38, name: 'Snare', value: [38, 125], index: 2 },
@@ -71,7 +71,7 @@ const jsonData = parseMusicXML(xmlStr, config);
 
 ```javascript
 const measure = parser.getMeasureById('M_1');
-const note = parser.getNoteById('N_1');
+const note = parser.getNoteById('N_1_1');
 ```
 
 ## 文档
