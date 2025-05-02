@@ -14,8 +14,9 @@ const configs = {
   45: { code: 45, name: 'Tom2', value: [45, 77], index: 6 },
   46: { code: 46, name: 'Hi-hat', value: [14, 46], index: 7 },
   48: { code: 48, name: 'Tom1', value: [48, 81], index: 1 },
-  49: { code: 49, name: 'Crash', value: [27, 49, 58], index: 2 },
+  49: { code: 49, name: 'Crash', value: [27, 49], index: 2 },
   51: { code: 51, name: 'Ride', value: [51, 59], index: 2 },
+  53: { code: 53, name: 'Ride', value: [51, 53], index: 2 },
   91: { code: 91, name: 'Ride', value: [40, 91], index: 3 },
   92: { code: 92, name: 'Hi-hat', value: [12, 64, 92], index: 4 }
 }
@@ -45,7 +46,7 @@ export default function App() {
     if (xmlContent) {
       const result = new Parser({
         xmlStr: xmlContent,
-        instrumentConfig: configs,
+        instruments: configs,
         debug: true,
         speed: 1
       })

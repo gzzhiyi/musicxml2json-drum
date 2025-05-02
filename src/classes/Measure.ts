@@ -30,8 +30,8 @@ export default class Measure {
   public time: Time | null = null
   public timeSignature: TimeSignature
 
-  private currentTime: number = 0
-  private currentDuration: number = 0
+  private _currentTime: number = 0
+  private _currentDuration: number = 0
 
   constructor({
     id,
@@ -49,7 +49,7 @@ export default class Measure {
     this.partId = partId
     this.timeSignature = timeSignature
 
-    this.currentTime = startTime
+    this._currentTime = startTime
 
     this.number = this.getNumber(xmlData)
     this.notes = this.getNotes(xmlData)
@@ -97,15 +97,15 @@ export default class Measure {
   private addNoteToList(note: NoteClass, notesList: NoteClass[]): void {
     const noteDuration = this.calNoteDuration(note)
 
-    note.appendTime(this.currentDuration, noteDuration)
+    note.appendTime(this._currentDuration, noteDuration)
     notesList.push(note)
 
-    this.currentDuration += noteDuration
+    this._currentDuration += noteDuration
 
     this.time = {
-      start: this.currentTime,
-      duration: this.currentDuration,
-      end: this.currentTime + this.currentDuration
+      start: this._currentTime,
+      duration: this._currentDuration,
+      end: this._currentTime + this._currentDuration
     }
   }
 
@@ -117,8 +117,11 @@ export default class Measure {
     return has(noteXML, 'chord')
   }
 
+  /**
+   * 计算音符时长
+   */
   private calNoteDuration(note: Note): number {
-    const { kind, type, timeModification, notations, dot } = note
+    const { kind, type, timeModification, dot } = note
 
     if (!type) return 0
 
@@ -136,11 +139,7 @@ export default class Measure {
     // 如果是连音组
     if (timeModification) {
       const { actualNotes, normalNotes } = timeModification
-      const isTupletStop = notations?.tuplet === 'stop'
-      const ratio = actualNotes / normalNotes
-
-      // 如果是 tuplet stop，通常需要还原比例
-      duration *= isTupletStop ? 1 / ratio : ratio
+      duration *= normalNotes / actualNotes
     }
 
     // 加点音处理

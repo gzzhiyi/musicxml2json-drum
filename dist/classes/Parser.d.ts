@@ -1,16 +1,16 @@
 import Part from '@/classes/Part';
-import { Measure as MeasureType, Note as NoteType, InstrumentConfig as InstrumentConfigType } from '@/types';
+import { Measure as MeasureType, Note as NoteType, Instruments as InstrumentsType } from '@/types';
 type PropsType = {
     debug?: boolean;
     speed?: number;
-    instrumentConfig: Record<number, InstrumentConfigType>;
+    instruments: Record<number, InstrumentsType>;
     xmlStr: string;
 };
 export default class Parser {
     parts: Part[];
     title: string;
     private _debug;
-    private _instrumentConfig;
+    private _instruments;
     private _oriXml;
     private _speed;
     constructor(props: PropsType);

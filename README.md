@@ -1,6 +1,3 @@
-根据你提供的 GitHub 地址，下面是更新后的 `README.md` 文件：
-
-```markdown
 # musicxml2json-drum
 
 `musicxml2json-drum` 是一个用于将 MusicXML 格式的乐谱文件转换为 JSON 格式的工具，专为打击乐器（如鼓）乐谱的转换而设计。它可以帮助开发者将 MusicXML 数据转换成易于处理和操作的 JSON 格式，以便于进一步的分析、渲染或存储。

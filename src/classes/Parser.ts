@@ -13,13 +13,13 @@ import {
   MeasureXML as MeasureXmlType,
   Measure as MeasureType,
   Note as NoteType,
-  InstrumentConfig as InstrumentConfigType
+  Instruments as InstrumentsType
 } from '@/types'
 
 type PropsType = {
   debug?: boolean
   speed?: number
-  instrumentConfig: Record<number, InstrumentConfigType>,
+  instruments: Record<number, InstrumentsType>,
   xmlStr: string
 }
 
@@ -28,14 +28,14 @@ export default class Parser {
   public title: string = ''
 
   private _debug: boolean = false
-  private _instrumentConfig: Record<number, InstrumentConfigType> | null = null
+  private _instruments: Record<number, InstrumentsType> | null = null
   private _oriXml: MusicXmlType | null = {}
   private _speed: number = 1
 
   constructor(props: PropsType) {
     const {
       debug,
-      instrumentConfig,
+      instruments,
       speed,
       xmlStr
     } = props
@@ -45,12 +45,12 @@ export default class Parser {
       return
     }
 
-    globalThis.InstrumentConfig = instrumentConfig
+    globalThis.Instruments = instruments
 
     // Original data
     this._debug = debug ?? this._debug
 
-    this._instrumentConfig = instrumentConfig
+    this._instruments = instruments
 
     this._oriXml = parseXML(xmlStr) || {}
     if (!this._oriXml) {

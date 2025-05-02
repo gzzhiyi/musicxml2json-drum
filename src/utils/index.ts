@@ -51,10 +51,10 @@ export function numberToNoteType(num: number): NoteType | undefined {
 }
 
 export function getInstrument(code: number, noteId?: string): NoteData | undefined {
-  const instrument = globalThis.InstrumentConfig?.[code]
+  const instrument = globalThis.Instruments?.[code]
 
   if (!instrument) {
-    console.warn(`[${noteId}] InstrumentConfig ${code} is not a valid code!`)
+    console.warn(`[${noteId}] Instruments ${code} is not a valid code!`)
     return undefined
   }
 
