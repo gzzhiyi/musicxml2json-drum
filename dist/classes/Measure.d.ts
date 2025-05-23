@@ -17,6 +17,7 @@ export default class Measure {
     partId: string;
     time: Time | null;
     timeSignature: TimeSignature;
+    private _startTime;
     private _currentTime;
     private _currentDuration;
     constructor({ id, isLast, metronome, partId, startTime, timeSignature, xmlData }: PropsType);

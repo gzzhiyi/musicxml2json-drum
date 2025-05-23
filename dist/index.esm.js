@@ -19388,15 +19388,23 @@ class Measure {
     partId;
     time = null;
     timeSignature;
-    _currentTime = 0;
-    _currentDuration = 0;
+    _startTime;
+    _currentTime;
+    _currentDuration;
     constructor({ id, isLast, metronome, partId, startTime, timeSignature, xmlData }) {
         this.id = id;
         this.isLast = isLast;
         this.metronome = metronome;
         this.partId = partId;
         this.timeSignature = timeSignature;
+        this._startTime = startTime;
         this._currentTime = startTime;
+        this._currentDuration = 0;
+        this.time = {
+            start: this._startTime,
+            duration: this._currentDuration,
+            end: this._startTime + this._currentDuration
+        };
         this.number = this.getNumber(xmlData);
         this.notes = this.getNotes(xmlData);
     }
@@ -19435,14 +19443,14 @@ class Measure {
     }
     addNoteToList(note, notesList) {
         const noteDuration = this.calNoteDuration(note);
-        note.appendTime(this._currentDuration, noteDuration);
+        note.appendTime(this._currentTime, noteDuration);
         notesList.push(note);
         this._currentDuration += noteDuration;
-        this.time = {
-            start: this._currentTime,
-            duration: this._currentDuration,
-            end: this._currentTime + this._currentDuration
-        };
+        this._currentTime += noteDuration;
+        if (this.time) {
+            this.time.duration = this._currentDuration;
+            this.time.end = this._startTime + this._currentDuration;
+        }
     }
     getNumber(measureXML) {
         return measureXML._number || '';

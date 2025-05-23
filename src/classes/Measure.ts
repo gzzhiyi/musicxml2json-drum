@@ -15,7 +15,7 @@ type PropsType = {
   isLast: boolean
   metronome: Metronome
   partId: string
-  startTime: number
+  startTime: number // 小节开始的时间位置
   timeSignature: TimeSignature
   xmlData: MeasureXML
 }
@@ -30,8 +30,9 @@ export default class Measure {
   public time: Time | null = null
   public timeSignature: TimeSignature
 
-  private _currentTime: number = 0
-  private _currentDuration: number = 0
+  private _startTime: number
+  private _currentTime: number
+  private _currentDuration: number
 
   constructor({
     id,
@@ -49,7 +50,15 @@ export default class Measure {
     this.partId = partId
     this.timeSignature = timeSignature
 
+    this._startTime = startTime
     this._currentTime = startTime
+    this._currentDuration = 0
+
+    this.time = {
+      start: this._startTime,
+      duration: this._currentDuration,
+      end: this._startTime + this._currentDuration
+    }
 
     this.number = this.getNumber(xmlData)
     this.notes = this.getNotes(xmlData)
@@ -97,15 +106,15 @@ export default class Measure {
   private addNoteToList(note: NoteClass, notesList: NoteClass[]): void {
     const noteDuration = this.calNoteDuration(note)
 
-    note.appendTime(this._currentDuration, noteDuration)
+    note.appendTime(this._currentTime, noteDuration)
     notesList.push(note)
 
     this._currentDuration += noteDuration
+    this._currentTime += noteDuration
 
-    this.time = {
-      start: this._currentTime,
-      duration: this._currentDuration,
-      end: this._currentTime + this._currentDuration
+    if (this.time) {
+      this.time.duration = this._currentDuration
+      this.time.end = this._startTime + this._currentDuration
     }
   }
 
